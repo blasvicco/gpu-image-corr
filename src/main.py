@@ -98,6 +98,8 @@ def cpu_find_difference(img01, img02, frame_size):
     for coord_x in range(frames_per_width):
       frame_from_x = coord_x * frame_size
       frame_to_x = coord_x * frame_size + frame_size
+      framed_img01_yx = []
+      framed_img02_yx = []
       for row in range(frame_size):
         framed_img01_yx = append(
           framed_img01_yx,
