@@ -146,7 +146,7 @@ def gpu_find_difference(img01, img02, frame_size):
 
   # printing total time needed to find the difference
   delta_time = timer() - start
-  print('Diff detected in {0:.2f}s.'.format(delta_time))
+  print('Difference detected in {0:.2f}s.'.format(delta_time))
   return coeficients
 
 def main():
