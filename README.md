@@ -75,6 +75,12 @@ Last step, just call the command:
 !gpu-image-corr
 ```
 
+This is how it looks when you run the command:
+![Colab 01](data/colab01.png)
+
+This is one of the image being generated:
+![Colab 02](data/colab02.png)
+
 ### Developer notes:
 I tried to keep the code as simple as I could. You will notice that pylint standards were applied. There are helpful comments all around.
 
