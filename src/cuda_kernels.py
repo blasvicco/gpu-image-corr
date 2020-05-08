@@ -20,12 +20,12 @@ PIXEL_DATA_LENGTH = 4
 cuda_corrcoef = cuda.jit(restype=float32, argtypes=[float32[:], float32[:], float32], device=True)(my.corrcoef) # pylint: disable=bad-whitespace
 
 @cuda.jit(argtypes=[float32[:,:,:], float32[:,:,:], float32[:,:]]) # pylint: disable=bad-whitespace
-def correlate_frames_kernel(cuda_img01_frames, cuda_img02_frames, cuda_coeficients):
+def correlate_frames_kernel(cuda_img01_frames, cuda_img02_frames, cuda_coefficients):
   '''To calculate the correlation between each frame'''
   coord_x = cuda.blockIdx.x
   coord_y = cuda.blockIdx.y
   coef = 0
-  cuda_coeficients[coord_x][coord_y] = cuda_corrcoef(
+  cuda_coefficients[coord_x][coord_y] = cuda_corrcoef(
     cuda_img01_frames[coord_x][coord_y],
     cuda_img02_frames[coord_x][coord_y],
     coef,

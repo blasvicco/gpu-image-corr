@@ -24,7 +24,7 @@ Available script arguments:
 ARGUMENTS                  : TYPE                                                         : DEFAULT VALUE
 -img1 / --image-01         : string (path to one image)                                   : data/img01.png
 -img2 / --image-02         : string (path to the other image)                             : data/img02.png
--f    / --frame-size'      : integer (size of the frame / window NxN)                     : 4
+-f    / --frame-size       : integer (size of the frame / window NxN)                     : 4
 -t    / --threshold        : float (threshold used to mark frame as different [0.0, 1.0]) : 0.8
 -coi  / --cpu-output-img   : string (cpu output image path / filename)                    : data/cpu_output_img.png
 -goi  / --gpu-output-img   : string (gpu output image path / filename)                    : data/gpu_output_img.png
@@ -43,7 +43,7 @@ from PIL import Image, ImageDraw
 import corrcoef as my
 import cuda_kernels as ck
 
-def create_comparison_image(img01, img02, coeficients, threshold, path, frame_size): # pylint: disable=too-many-arguments
+def create_comparison_image(img01, img02, coefficients, threshold, path, frame_size): # pylint: disable=too-many-arguments
   '''Create a comparison image between img01 and img02'''
 
   # image parametrization
@@ -62,7 +62,7 @@ def create_comparison_image(img01, img02, coeficients, threshold, path, frame_si
     for coord_x in range(frames_per_width):
       frame_from_x = coord_x * frame_size
       frame_to_x = coord_x * frame_size + frame_size
-      if coeficients[coord_x][coord_y] < threshold:
+      if coefficients[coord_x][coord_y] < threshold:
         detected_diff.rectangle(
           [(frame_from_x, frame_from_y), (frame_to_x, frame_to_y)],
           fill=None,
@@ -87,7 +87,7 @@ def cpu_find_difference(img01, img02, frame_size):
   # image parametrization
   frames_per_height = int(img01.shape[0] / frame_size)
   frames_per_width = int(img01.shape[1] / frame_size)
-  coeficients = zeros((frames_per_width, frames_per_height), dtype=float32)
+  coefficients = zeros((frames_per_width, frames_per_height), dtype=float32)
 
   # calculate the correlation between the images frame by frame
   for coord_y in range(frames_per_height):
@@ -110,12 +110,12 @@ def cpu_find_difference(img01, img02, frame_size):
           framed_img02_y[row][frame_from_x:frame_to_x].flatten()
         )
 
-      coeficients[coord_x][coord_y] = my.corrcoef(framed_img01_yx, framed_img02_yx)
+      coefficients[coord_x][coord_y] = my.corrcoef(framed_img01_yx, framed_img02_yx)
 
   # printing total time needed to find the difference
   delta_time = timer() - start
   print('Difference detected in {0:.2f}s.'.format(delta_time))
-  return coeficients
+  return coefficients
 
 def gpu_find_difference(img01, img02, frame_size):
   '''Find the difference between 2 images using the GPU'''
@@ -125,7 +125,7 @@ def gpu_find_difference(img01, img02, frame_size):
   # image parametrization
   frames_per_height = int(img01.shape[0] / frame_size)
   frames_per_width = int(img01.shape[1] / frame_size)
-  coeficients = zeros((frames_per_width, frames_per_height), dtype=float32)
+  coefficients = zeros((frames_per_width, frames_per_height), dtype=float32)
 
   # flatten frames
   img01_frames = ck.pre_process(img01, frames_per_height, frames_per_width, frame_size)
@@ -138,16 +138,16 @@ def gpu_find_difference(img01, img02, frame_size):
   # calculate the correlation between the images frame by frame
   cuda_img01_frames = cuda.to_device(img01_frames)
   cuda_img02_frames = cuda.to_device(img02_frames)
-  cuda_coeficients = cuda.to_device(coeficients)
+  cuda_coefficients = cuda.to_device(coefficients)
   ck.correlate_frames_kernel[blockspergrid, threadsperblock]( # pylint: disable=unsubscriptable-object
-    cuda_img01_frames, cuda_img02_frames, cuda_coeficients
+    cuda_img01_frames, cuda_img02_frames, cuda_coefficients
   )
-  cuda_coeficients.to_host()
+  cuda_coefficients.to_host()
 
   # printing total time needed to find the difference
   delta_time = timer() - start
   print('Difference detected in {0:.2f}s.'.format(delta_time))
-  return coeficients
+  return coefficients
 
 def main():
   '''Main script'''

@@ -1,5 +1,5 @@
 '''
-Correlation coeficient between two vectors using the dot product.
+Correlation coefficient between two vectors using the dot product.
 Note that the code use explicit 'for' statements to go through
 the vector values. We do that to keep the code as simple as we can
 for Numba/Cuda pre compilation. (pylint : disable=consider-using-enumerate)
@@ -11,7 +11,7 @@ compatibility.
 import math
 
 def corrcoef(vector01, vector02, coef=0):
-  '''Correlation coeficient between two vectors using dot product'''
+  '''Correlation coefficient between two vectors using dot product'''
   max_v1, max_v2 = (0, 0)
   for i in range(len(vector01)): # pylint: disable=consider-using-enumerate
     # looking the max value in each vector
