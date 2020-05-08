@@ -22,12 +22,12 @@ frames that doesn't reach the threshold.
 
 Available script arguments:
 ARGUMENTS                  : TYPE                                                         : DEFAULT VALUE
--img1 / --image-01         : string (path to one image)                                   : ../data/img01.png
--img2 / --image-02         : string (path to the other image)                             : ../data/img02.png
+-img1 / --image-01         : string (path to one image)                                   : data/img01.png
+-img2 / --image-02         : string (path to the other image)                             : data/img02.png
 -f    / --frame-size'      : integer (size of the frame / window NxN)                     : 4
 -t    / --threshold        : float (threshold used to mark frame as different [0.0, 1.0]) : 0.8
--coi  / --cpu-output-img   : string (cpu output image path / filename)                    : ../data/cpu_output_img.png
--goi  / --gpu-output-img   : string (gpu output image path / filename)                    : ../data/gpu_output_img.png
+-coi  / --cpu-output-img   : string (cpu output image path / filename)                    : data/cpu_output_img.png
+-goi  / --gpu-output-img   : string (gpu output image path / filename)                    : data/gpu_output_img.png
 
 '''
 
@@ -185,12 +185,12 @@ def read_args():
   parser.add_argument('-goi', '--gpu-output-img', type=str)
 
   parser.set_defaults(
-    image_01='../data/img01.png',
-    image_02='../data/img02.png',
+    image_01='data/img01.png',
+    image_02='data/img02.png',
     frame_size=4,
     threshold=0.8,
-    cpu_output_img='../data/cpu_output_img.png',
-    gpu_output_img='../data/gpu_output_img.png',
+    cpu_output_img='data/cpu_output_img.png',
+    gpu_output_img='data/gpu_output_img.png',
   )
 
   return parser.parse_args()
