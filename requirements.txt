@@ -1,4 +1,4 @@
 numba==0.49.0
 numpy==1.22.0
-Pillow==10.0.1
+Pillow==10.2.0
 pylint==2.4.4
