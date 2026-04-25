@@ -6,7 +6,7 @@ supported cuda decorators.
 
 # Importing external libs
 import numpy as np
-from numba import cuda, uint8, float32
+from numba import cuda, uint8, float32, void
 
 # Importing app lib
 import corrcoef as my
