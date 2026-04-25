@@ -17,9 +17,9 @@ import corrcoef as my
 PIXEL_DATA_LENGTH = 4
 
 # pre compile the standard corrcoef method to be use as cuda call
-cuda_corrcoef = cuda.jit(restype=float32, argtypes=[float32[:], float32[:], float32], device=True)(my.corrcoef) # pylint: disable=bad-whitespace
+cuda_corrcoef = cuda.jit(float32(float32[:], float32[:], float32), device=True)(my.corrcoef) # pylint: disable=bad-whitespace
 
-@cuda.jit(argtypes=[float32[:,:,:], float32[:,:,:], float32[:,:]]) # pylint: disable=bad-whitespace
+@cuda.jit(void(float32[:,:,:], float32[:,:,:], float32[:,:])) # pylint: disable=bad-whitespace
 def correlate_frames_kernel(cuda_img01_frames, cuda_img02_frames, cuda_coefficients):
   '''To calculate the correlation between each frame'''
   coord_x = cuda.blockIdx.x
@@ -31,7 +31,7 @@ def correlate_frames_kernel(cuda_img01_frames, cuda_img02_frames, cuda_coefficie
     coef,
   )
 
-@cuda.jit(argtypes=[uint8[:,:,:], float32[:,:,:], uint8]) # pylint: disable=bad-whitespace
+@cuda.jit(void(uint8[:,:,:], float32[:,:,:], uint8)) # pylint: disable=bad-whitespace
 def flatten_frame_kernel(cuda_img, cuda_flatten_frame, frame_size):
   '''To flatten each window frame from the img array to a vector'''
   index_x, index_y = cuda.grid(2) # pylint: disable=not-callable
